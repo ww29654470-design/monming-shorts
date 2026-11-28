@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # 莫名知道：每日動畫知識 Shorts（簡易免費版）
-import os, math, subprocess, textwrap
+import os, math, subprocess, textwrap, json
 from datetime import date
 from PIL import Image, ImageDraw, ImageFont
 
@@ -94,3 +94,23 @@ subprocess.run([
     "-movflags", "+faststart", video
 ], check=True)
 print("Created:", video)
+# 自動產生 YouTube 標題與說明
+metadata = {
+    "title": title + "｜莫名知道",
+    "description": (
+        f"今天的冷知識：{title}\n\n"
+        + "\n".join(lines)
+        + "\n\n你還知道哪些有趣的知識？歡迎留言分享！"
+        + "\n\n#Shorts #冷知識 #科普 #莫名知道"
+    ),
+    "tags": ["Shorts", "冷知識", "科普", "莫名知道"]
+}
+
+metadata_file = os.path.join(
+    OUT, f"moming_shorts_{today}.json"
+)
+
+with open(metadata_file, "w", encoding="utf-8") as f:
+    json.dump(metadata, f, ensure_ascii=False, indent=2)
+
+print("Created metadata:", metadata_file)
