@@ -1,3 +1,4 @@
+
 name: MoMing Shorts Daily
 
 on:
@@ -30,7 +31,7 @@ jobs:
           path: output/*.mp4
           if-no-files-found: error
 
-            - name: Upload video to Google Drive
+      - name: Upload video to Google Drive
         env:
           DRIVE_UPLOAD_URL: ${{ secrets.DRIVE_UPLOAD_URL }}
           DRIVE_UPLOAD_TOKEN: ${{ secrets.DRIVE_UPLOAD_TOKEN }}
@@ -75,3 +76,4 @@ jobs:
 
               print("已送到 Google Drive：" + filename)
           PY
+
