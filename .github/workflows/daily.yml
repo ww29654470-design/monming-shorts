@@ -30,7 +30,7 @@ jobs:
           path: output/*.mp4
           if-no-files-found: error
 
-      - name: Upload video to Google Drive
+            - name: Upload video to Google Drive
         env:
           DRIVE_UPLOAD_URL: ${{ secrets.DRIVE_UPLOAD_URL }}
           DRIVE_UPLOAD_TOKEN: ${{ secrets.DRIVE_UPLOAD_TOKEN }}
@@ -43,13 +43,21 @@ jobs:
               raise Exception("找不到 MP4 影片")
 
           for filename in files:
+              metadata_path = os.path.splitext(filename)[0] + ".json"
+
+              with open(metadata_path, encoding="utf-8") as f:
+                  metadata = json.load(f)
+
               with open(filename, "rb") as f:
                   video = base64.b64encode(f.read()).decode("ascii")
 
               payload = {
                   "token": os.environ["DRIVE_UPLOAD_TOKEN"],
                   "filename": os.path.basename(filename),
-                  "file": video
+                  "file": video,
+                  "title": metadata["title"],
+                  "description": metadata["description"],
+                  "tags": metadata["tags"]
               }
 
               request = urllib.request.Request(
